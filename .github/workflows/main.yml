@@ -28,4 +28,4 @@ jobs:
         sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" config.json
 
     - name: Deploy discord bot
-      run: node index.js &
+      run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
