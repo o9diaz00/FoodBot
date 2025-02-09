@@ -24,6 +24,3 @@ jobs:
 
     - name: Edit config file to insert secrets
       run: echo "Client ID: ${{ secrets.CLIENT_ID }}"
-
-#    - name: Deploy to Discord
-#      run: node index.js
