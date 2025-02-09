@@ -6,9 +6,8 @@ on:
 
 jobs:
   bot:
-    runs-on: ubuntu-latest
-    container:
-      image: node:20
+    runs-on:
+    labels: chefboyrd-virtual-machine
 
     steps:
     - name: Checkout Code
