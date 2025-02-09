@@ -21,9 +21,8 @@ async function fetchMembers()
         }
     });
 }
-function removeItem(array, value, name)
+function removeItem(array, value, name, message)
 {
-    name === "" ? "the general food" : name.concat("'s");
     if (array.includes(value))
     {
         var index = array.indexOf(value);
@@ -37,9 +36,8 @@ function removeItem(array, value, name)
     return array
 }
 
-function addItem(array, value, name)
+function addItem(array, value, name, message)
 {
-    name === "" ? "the general food" : name.concat("'s");
     if (array.includes(value))
     { message.reply(""+value+" is already added to "+name+" list!"); }
     else
@@ -49,27 +47,24 @@ function addItem(array, value, name)
     }
 }
 
-function clearArray(array, name)
+function clearArray(array, name, message)
 {
-    name === "" ? "the general food" : name.concat("'s");
     message.reply("Okay, I am removing all the items from "+name+" list");
 
     while (array.length > 0)
     { array.pop(); }
 }
 
-function listArray(array, name)
+function listArray(array, name, message)
 {
-    name === "" ? "the general food" : name.concat("'s");
     if (array.length == 0)
     { message.reply("No items have been added to "+name+" list!"); }
     else
     { message.reply("These are the foods in "+name+" list:\n"+array.join("\r\n")); }
 }
 
-function selectRandomElement(array, name)
+function selectRandomElement(array, name, message)
 {
-    name === "" ? "the general food" : name.concat("'s");
     if (array.length == 0)
     { message.reply("There are no choices in "+name+" list for me to choose from"); }
     else
@@ -79,7 +74,7 @@ function selectRandomElement(array, name)
     }
 }
 
-function importFoodList(array, name)
+function importFoodList(array, name, message)
 {
     if (foodList["general"].length == 0)
     { message.reply("There are no choices in the general list to copy over"); }
@@ -105,34 +100,34 @@ client.on("messageCreate", (message) => {
     if (message.author.username != "")
 
     if (message.content == '!removeAllFood')
-    { clearArray(foodList[message.author.id], message.author.username); }
+    { clearArray(foodList[message.author.id], "["+message.author.username.toUpperCase()+"]'s", message); }
 
     if (message.content.startsWith('!addFood '))
-    { addItem(foodList[message.author.id], message.content.split(" ")[1].toUpperCase(), message.author.username); }
+    { addItem(foodList[message.author.id], message.content.split(" ")[1].toUpperCase(), "["+message.author.username.toUpperCase()+"]'s", message); }
 
     if (message.content.startsWith('!addFoodGeneral '))
-    { addItem(foodList["general"], message.content.split(" ")[1].toUpperCase(), ""); }
+    { addItem(foodList["general"], message.content.split(" ")[1].toUpperCase(), "the general food", message); }
 
     if (message.content.startsWith('!removeFood '))
-    { foodList[message.author.id] = removeItem(foodList[message.author.id], message.content.split(" ")[1].toUpperCase(), message.author.username); }
+    { foodList[message.author.id] = removeItem(foodList[message.author.id], message.content.split(" ")[1].toUpperCase(), "["+message.author.username.toUpperCase()+"]'s", message); }
 
     if (message.content.startsWith('!removeFoodGeneral '))
-    { foodList["general"] = removeItem(foodList["general"], message.content.split(" ")[1].toUpperCase(), ""); }
+    { foodList["general"] = removeItem(foodList["general"], message.content.split(" ")[1].toUpperCase(), "the general food", message); }
 
     if (message.content == "!foodList")
-    { listArray(foodList[message.author.id], message.author.username); }
+    { listArray(foodList[message.author.id], "["+message.author.username.toUpperCase()+"]'s", message); }
 
     if (message.content == "!foodListGeneral")
-    { listArray(foodList["general"], ""); }
+    { listArray(foodList["general"], "the general food", message); }
 
     if (message.content == "!pickFood")
-    { selectRandomElement(foodList[message.author.id], message.author.username); }
+    { selectRandomElement(foodList[message.author.id], "["+message.author.username+"]'s", message); }
 
     if (message.content == "!pickFoodGeneral")
-    { selectRandomElement(foodList["general"], ""); }
+    { selectRandomElement(foodList["general"], "the general food", message); }
 
     if (message.content == "!import")
-    { importFoodList(foodList[message.author.id], message.author.username); }
+    { importFoodList(foodList[message.author.id], "["+message.author.username+"]'s", message); }
 
     if (message.content == "!foodHelp")
     {
