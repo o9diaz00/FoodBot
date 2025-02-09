@@ -23,4 +23,8 @@ jobs:
       run: npm install
 
     - name: Edit config file to insert secrets
-      run: echo "Client ID: ${{ secrets.CLIENT_ID }}"
+      run: |
+        echo "Client ID: ${{ secrets.CLIENT_ID }}"
+
+#    - name: Deploy discord bot
+#      run: node index.js
