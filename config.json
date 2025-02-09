@@ -1,5 +1,5 @@
 {
-  "clientId": "${{ secrets.CLIENT_ID }}",
-  "guildId": "${{ secrets.GUILD_ID }}",
-  "token": "${{ secrets.DISCORD_TOKEN }}"
+  "clientId": "${{ vars.CLIENT_ID }}",
+  "guildId": "${{ vars.GUILD_ID }}",
+  "token": "${{ vars.DISCORD_TOKEN }}"
 }
