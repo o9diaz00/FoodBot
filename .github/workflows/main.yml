@@ -22,4 +22,4 @@ jobs:
       run: npm install
 
     - name: Deploy discord bot
-      run: node index.js
+      run: cat config.json
