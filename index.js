@@ -58,7 +58,7 @@ function clearArray(array, name)
     { array.pop(); }
 }
 
-function listArray(array, name);
+function listArray(array, name)
 {
     name = "" ? "the general food" : name.concat("'s");
     if (array.length == 0)
