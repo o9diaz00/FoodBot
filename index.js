@@ -1,10 +1,7 @@
 //require('dotenv').config(); //initialize dotenv
 //const cron = require('cron');
 const { Client, Discord, Intents, TextChannel } = require('discord.js')
-const clientId = process.env.CLIENT_ID;
-const guildId = process.env.GUILD_ID;
-const token = process.env.DISCORD_TOKEN;
-//const { clientId, guildId, token } = require('./config.json');
+const { clientId, guildId, token } = require('./config.json');
 const client = new Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers'] });
 //client = new Client({ intents: 32767 });
 
