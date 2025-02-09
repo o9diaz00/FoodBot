@@ -23,7 +23,7 @@ async function fetchMembers()
 }
 function removeItem(array, value, name)
 {
-    name = "" ? "the general food" : name.concat("'s");
+    name === "" ? "the general food" : name.concat("'s");
     if (array.includes(value))
     {
         var index = array.indexOf(value);
@@ -39,7 +39,7 @@ function removeItem(array, value, name)
 
 function addItem(array, value, name)
 {
-    name = "" ? "the general food" : name.concat("'s");
+    name === "" ? "the general food" : name.concat("'s");
     if (array.includes(value))
     { message.reply(""+value+" is already added to "+name+" list!"); }
     else
@@ -51,7 +51,7 @@ function addItem(array, value, name)
 
 function clearArray(array, name)
 {
-    name = "" ? "the general food" : name.concat("'s");
+    name === "" ? "the general food" : name.concat("'s");
     message.reply("Okay, I am removing all the items from "+name+" list");
 
     while (array.length > 0)
@@ -60,7 +60,7 @@ function clearArray(array, name)
 
 function listArray(array, name)
 {
-    name = "" ? "the general food" : name.concat("'s");
+    name === "" ? "the general food" : name.concat("'s");
     if (array.length == 0)
     { message.reply("No items have been added to "+name+" list!"); }
     else
@@ -69,7 +69,7 @@ function listArray(array, name)
 
 function selectRandomElement(array, name)
 {
-    name = "" ? "the general food" : name.concat("'s");
+    name === "" ? "the general food" : name.concat("'s");
     if (array.length == 0)
     { message.reply("There are no choices in "+name+" list for me to choose from"); }
     else
