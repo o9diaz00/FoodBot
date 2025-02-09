@@ -24,7 +24,9 @@ jobs:
 
     - name: Edit config file to insert secrets
       run: |
-        echo "Client ID: ${{ secrets.CLIENT_ID }}"
+        sed -i "s/DISCORD_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" ../../config.json
+        sed -i "s/GUILD_ID/${{ secrets.GUILD_ID }}/g" ../../config.json
+        sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" ../../config.json
 
 #    - name: Deploy discord bot
 #      run: node index.js
