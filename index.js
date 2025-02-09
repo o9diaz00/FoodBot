@@ -6,7 +6,7 @@ const client = new Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent
 //client = new Client({ intents: 32767 });
 
 var foodList = {
-    general: ["GIANTASSSUB","CHIPOTLE","RAMEN","PAELLA","CHICKFILA", "MCDONALDS", "POPEYES", "WENDY'S", "FOODATTHEHOUSE", "KFC", "PIZZAHUT", "PANDAEXPRESS", "GYROS", "W/EYOUWANT", "SMASHBURGER", "PHO", "BJHOMECOOKEDMEALS"],
+    general: [],
 };
 
 async function fetchMembers()
@@ -21,30 +21,80 @@ async function fetchMembers()
         }
     });
 }
-function removeItem(array, value)
+function removeItem(array, value, name)
 {
-    var index = array.indexOf(value);
-    if (index > -1)
-    { array.splice(index, 1); }
+    name = "" ? "the general food" : name.concat("'s");
+    if (array.includes(value))
+    {
+        var index = array.indexOf(value);
+        message.reply("Removed "+value+" from "+name+" list!");
+        if (index > -1)
+        { array.splice(index, 1); }
+    }
+    else
+        { message.reply(msg+" is not in "+name+" list!"); }
+
     return array
 }
 
-function clearArray(array)
+function addItem(array, value, name)
 {
-    while (array.length > 0)
-    { array.pop(); }
-    return array;
+    name = "" ? "the general food" : name.concat("'s");
+    if (array.includes(value))
+    { message.reply(""+value+" is already added to "+name+" list!"); }
+    else
+    {
+        message.reply("Added "+value+" to "+name+" food list!");
+        array.push(value);
+    }
 }
 
-//songList.push("https://www.youtube.com/watch?v=kfVsfOSbJY0&ab_channel=rebecca");
+function clearArray(array, name)
+{
+    name = "" ? "the general food" : name.concat("'s");
+    message.reply("Okay, I am removing all the items from "+name+" list");
+
+    while (array.length > 0)
+    { array.pop(); }
+}
+
+function listArray(array, name);
+{
+    name = "" ? "the general food" : name.concat("'s");
+    if (array.length == 0)
+    { message.reply("No items have been added to "+name+" list!"); }
+    else
+    { message.reply("These are the foods in "+name+" list:\n"+array.join("\r\n")); }
+}
+
+function selectRandomElement(array, name)
+{
+    name = "" ? "the general food" : name.concat("'s");
+    if (array.length == 0)
+    { message.reply("There are no choices in "+name+" list for me to choose from"); }
+    else
+    {
+        var rand = Math.floor(Math.random() * array.length);
+        message.reply("Choosing from the list, why not have you some ["+array[rand]+"] today");
+    }
+}
+
+function importFoodList(array, name)
+{
+    if (foodList["general"].length == 0)
+    { message.reply("There are no choices in the general list to copy over"); }
+    else
+    {
+        for (i=0; i<foodList["general"].length; i+=1)
+        {
+            if (!array.includes(foodList["general"][i]))
+            { array.push(foodList["general"][i]); }
+        }
+    message.reply("Added items from the general list into "+name+" list");
+    }
+}
 
 client.once('ready', () => {
-  /*let fridaySong = new cron.CronJob('00 00 10 * * 5', () => {
-    const chn = client.channels.fetch("239077914363035649");
-    chn.send("Happy Friday!\n"+songList[Math.floor(Math.random() * songList.length)]);
-    console.log("Song List\n"+songList);
-    });
-    fridaySong.start();*/
     fetchMembers();
 });
 
@@ -55,145 +105,34 @@ client.on("messageCreate", (message) => {
     if (message.author.username != "")
 
     if (message.content == '!removeAllFood')
-    {
-        var key = message.author.id;
-        var name = message.author.username;
-
-        message.reply("Okay, I am removing all the items from ["+name+"]'s list");
-
-        console.log(foodList[key]);
-    }
+    { clearArray(foodList[message.author.id], message.author.username); }
 
     if (message.content.startsWith('!addFood '))
-    {
-        var msg = message.content.split(" ")[1].toUpperCase();
-        var key = message.author.id;
-        var name = message.author.username;
-
-        if (foodList[key].includes(msg))
-        { message.reply(""+msg+" is already added to ["+name+"]'s list!"); }
-        else
-        {
-            message.reply("Added "+msg+" to ["+name+"]'s food list!");
-            foodList[key].push(msg);
-        }
-    }
+    { addItem(foodList[message.author.id], message.content.split(" ")[1].toUpperCase(), message.author.username); }
 
     if (message.content.startsWith('!addFoodGeneral '))
-    {
-        var msg = message.content.split(" ")[1].toUpperCase();
-
-        if (foodList["general"].includes(msg))
-        { message.reply(""+msg+" is already added to the general list!"); }
-        else
-        {
-            message.reply("Added "+msg+" to the general food list!");
-            foodList["general"].push(msg);
-            console.log(foodList["general"]);
-        }
-    }
+    { addItem(foodList["general"], message.content.split(" ")[1].toUpperCase(), ""); }
 
     if (message.content.startsWith('!removeFood '))
-    {
-        var msg = message.content.split(" ")[1].toUpperCase();
-        var key = message.author.id;
-        var name = message.author.username;
-
-        if (foodList[key].includes(msg))
-        {
-            message.reply("Removed "+msg+" from ["+name+"]'s list!");
-            foodList[key] = removeItem(foodList[key], msg);
-            console.log(name+"'s"+foodList[key]);
-        }
-        else
-        { message.reply(msg+" is not in ["+name+"]'s list!"); }
-    }
+    { foodList[message.author.id] = removeItem(foodList[message.author.id], message.content.split(" ")[1].toUpperCase(), message.author.username); }
 
     if (message.content.startsWith('!removeFoodGeneral '))
-    {
-        var msg = message.content.split(" ")[1].toUpperCase();
-
-        if (foodList["general"].includes(msg))
-        {
-            message.reply("Removed "+msg+" from the general list!");
-            foodList["general"] = removeItem(foodList["general"], msg);
-            console.log(foodList["general"]);
-        }
-        else
-        { message.reply(msg+" is not in the general list!"); }
-    }
+    { foodList["general"] = removeItem(foodList["general"], message.content.split(" ")[1].toUpperCase(), ""); }
 
     if (message.content == "!foodList")
-    {
-        var key = message.author.id;
-        var name = message.author.username;
-
-        if (foodList[key].length == 0)
-        { message.reply("No items have been added to ["+name+"]'s list!"); }
-        else
-        {
-            message.reply("These are the foods in ["+name+"]'s list:\n"+foodList[key].join("\r\n"));
-            console.log("["+name+"]'s Food List]\n"+foodList[key]);
-        }
-    }
+    { listArray(foodList[message.author.id], message.author.username); }
 
     if (message.content == "!foodListGeneral")
-    {
-        if (foodList["general"].length == 0)
-        { message.reply("No items have been added to the general food list"); }
-        else
-        {
-            message.reply("These are the list of foods:\n"+foodList["general"].join("\r\n"));
-            console.log("[Food List]\n"+foodList["general"]);
-        }
-    }
+    { listArray(foodList["general"], ""); }
 
     if (message.content == "!pickFood")
-    {
-        var key = message.author.id;
-        var name = message.author.username;
-
-        if (foodList[key].length == 0)
-        { message.reply("There are no choices in ["+name+"]'s list for me to choose from"); }
-        else
-        {
-            var rand = Math.floor(Math.random() * foodList[key].length);
-            message.reply("Choosing from the list, why not have you some ["+foodList[key][rand]+"] today");
-        }
-    }
+    { selectRandomElement(foodList[message.author.id], message.author.username); }
 
     if (message.content == "!pickFoodGeneral")
-    {
-        if (foodList["general"].length == 0)
-        { message.reply("There are no choices in the general list for me to choose from"); }
-        else
-        {
-            var rand = Math.floor(Math.random() * foodList["general"].length);
-            message.reply("Choosing from the general list, why not have you some ["+foodList["general"][rand]+"] today");
-        }
-    }
+    { selectRandomElement(foodList["general"], ""); }
 
     if (message.content == "!import")
-    {
-        if (foodList["general"].length == 0)
-        { message.reply("There are no choices in the general list to copy over"); }
-        else
-        {
-            var key = message.author.id;
-            var name = message.author.username;
-
-            for (i=0; i<foodList["general"].length; i+=1)
-            {
-                if (!foodList[key].includes(foodList["general"][i]))
-                {
-                    foodList[key].push(foodList["general"][i]);
-                    console.log("Added "+foodList["general"][i]+" to ["+name+"]'s list");
-                }
-            }
-            message.reply("Added items from the general list into ["+name+"]'s list");
-            console.log("["+name+"'s Food List]\n"+foodList[key]);
-        }
-    }
+    { importFoodList(foodList[message.author.id], message.author.username); }
 
     if (message.content == "!foodHelp")
     {
