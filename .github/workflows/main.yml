@@ -7,7 +7,7 @@ on:
 jobs:
   bot:
     runs-on:
-    labels: chefboyrd-virtual-machine
+      labels: chefboyrd-virtual-machine
 
     steps:
     - name: Checkout Code
