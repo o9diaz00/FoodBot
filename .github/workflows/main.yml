@@ -23,4 +23,4 @@ jobs:
       run: npm install
 
     - name: Deploy to Discord
-      run: npm run deploy -- --token ${{ secrets.DISCORD_TOKEN }}
+      run: node index.js
