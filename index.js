@@ -3,7 +3,10 @@
 const { Client, Discord, Intents, TextChannel } = require('discord.js')
 const { clientId, guildId, token } = require('./config.json');
 const client = new Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers'] });
+const { exec } = require('child_process');
 //client = new Client({ intents: 32767 });
+
+// https://tcbonepiecechapters.com/mangas/5/one-piece
 
 var foodList = {
     general: [],
@@ -89,6 +92,31 @@ function importFoodList(array, name, message)
     }
 }
 
+function getManga(series, message)
+{
+    var managaList = {
+        "onepiece": "https://tcbonepiecechapters.com/mangas/5/one-piece"
+        }
+
+    if (!mangaList[series])
+    { message.reply("Sorry, this feature hasn't been implemented for "+series); return 1};
+
+    const cmd = "curl -s -H 'Accept: application/json' -X GET "+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2";
+    exec(cmd, (error, stdout, stderr) => {
+    if (error) {
+        console.error(`exec error: ${error}`);
+        return;
+    }
+    if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+    }
+    try {
+        message.reply(mangaList[series]+stdout);
+    } catch (e) { console.error("Error parsing JSON", e); }
+    });
+}
+
 client.once('ready', () => {
     fetchMembers();
 });
@@ -129,6 +157,9 @@ client.on("messageCreate", (message) => {
     if (message.content == "!import")
     { importFoodList(foodList[message.author.id], "["+message.author.username+"]'s", message); }
 
+    if (message.content.startsWith('!manga '))
+    { getManga(message.content.split(" ")[1].toLowerCase(), message); }
+
     if (message.content == "!foodHelp")
     {
     const reply = `These are the commands that currently work:
@@ -141,7 +172,8 @@ client.on("messageCreate", (message) => {
                    !foodListGeneral => Grabs the list of items in the general list
                    !pickFood => Randomly selects an item from your personal list
                    !pickFoodGeneral => Randomly selects an item from the general food list
-                   !import => Sets your list to the general food list`
+                   !import => Sets your list to the general food list
+                   !manga $manga => Attempts to retrieve the latest chapter for the manga you specified (only works for onepiece right now)`
     message.reply(reply);
     }
 });
