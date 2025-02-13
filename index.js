@@ -94,14 +94,14 @@ function importFoodList(array, name, message)
 
 function getManga(series, message)
 {
-    var managaList = {
-        "onepiece": "https://tcbonepiecechapters.com/mangas/5/one-piece"
+    var mangaList = {
+        "onepiece": "tcbonepiecechapters.com/mangas/5/one-piece"
         }
 
     if (!mangaList[series])
     { message.reply("Sorry, this feature hasn't been implemented for "+series); return 1};
 
-    const cmd = "curl -s -H 'Accept: application/json' -X GET "+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2";
+    const cmd = "curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2";
     exec(cmd, (error, stdout, stderr) => {
     if (error) {
         console.error(`exec error: ${error}`);
@@ -112,7 +112,9 @@ function getManga(series, message)
         return;
     }
     try {
-        message.reply(mangaList[series]+stdout);
+        if (series == "onepiece")
+        { url = mangaList[series].split("/")[0]; }
+        message.reply("https://"+url+stdout);
     } catch (e) { console.error("Error parsing JSON", e); }
     });
 }
