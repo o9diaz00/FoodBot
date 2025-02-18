@@ -43,6 +43,6 @@ jobs:
         if: runner.os == 'Linux'
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
       - name: Deploy bot WINDOWS
-        shell: bash
+        shell: cmd
         if: runner.os == 'Windows'
-        run: set RUNNER_TRACKING_ID=""
+        run: set RUNNER_TRACKING_ID="" && node index.js &
