@@ -22,6 +22,7 @@ jobs:
       run: npm install
 
   deploy-ubuntu:
+    if: $RUNNER.os == "Linux"
     needs: setup
     runs-on:
       labels: [discord-bot, Linux]
@@ -35,12 +36,14 @@ jobs:
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
 
   deploy-windows:
+    if: $RUNNER.os == "Windows"
     needs: setup
     runs-on:
       labels: [discord-bot, Windows]
     steps:
       - name: Update config.json
         run: |
+          ls 
           (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json
           (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
           (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
