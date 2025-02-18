@@ -22,7 +22,7 @@ jobs:
       run: npm install
 
   deploy-ubuntu:
-    if: $RUNNER.os == "Linux"
+    if: $RUNNER_OS == "Linux"
     needs: setup
     runs-on:
       labels: [discord-bot, Linux]
@@ -36,7 +36,7 @@ jobs:
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
 
   deploy-windows:
-    if: $RUNNER.os == "Windows"
+    if: $RUNNER_OS == "Windows"
     needs: setup
     runs-on:
       labels: [discord-bot, Windows]
