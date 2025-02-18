@@ -44,4 +44,4 @@ jobs:
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
       - name: Deploy bot WINDOWS
         if: runner.os == 'Windows'
-        run: Start-Job -ScriptBlock { node index.js } -Name "FoodBot"
+        run: RUNNER_TRACKING_ID="" && (Start-Process -NoNewWindow node index.js)
