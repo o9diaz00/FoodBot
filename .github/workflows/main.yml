@@ -45,4 +45,4 @@ jobs:
       - name: Deploy bot WINDOWS
         shell: bash
         if: runner.os == 'Windows'
-        run: set RUNNER_TRACKING_ID="" && (node index.js &)
+        run: set RUNNER_TRACKING_ID="" && node index.js &
