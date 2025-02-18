@@ -44,4 +44,6 @@ jobs:
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
       - name: Deploy bot WINDOWS
         if: runner.os == 'Windows'
-        run: echo "RUNNER_TRACKING_ID=''" | Out-File -FilePath $env:RUNNER_TRACKING_ID; if($?) { Start-Process -NoNewWindow node index.js }
+        run: |
+          $env:RUNNER_TRACKING_ID=""
+          Start-Process -NoNewWindow node index.js
