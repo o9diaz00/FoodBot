@@ -100,7 +100,7 @@ function getManga(series, message)
     if (!mangaList[series])
     { message.reply("Sorry, this feature hasn't been implemented for "+series); return 1};
 
-    const cmd = "curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2";
+    const cmd = "bash curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2";
     exec(cmd, (error, stdout, stderr) => {
     if (error) {
         console.error(`exec error: ${error}`);
