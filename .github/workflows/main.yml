@@ -27,19 +27,20 @@ jobs:
       labels: discord-bot
     steps:
       - name: Update config.json
-        if: runner.os == "Linux"
         run: |
-          sed -i "s/DISCORD_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" config.json
-          sed -i "s/GUILD_ID/${{ secrets.GUILD_ID }}/g" config.json
-          sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" config.json
-        if: runner.os == "Windows"
-        run: |
-          (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json\
-          (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
-          (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
+          if [ $RUNNER_OS == "Linux" ]; then
+            sed -i "s/DISCORD_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" config.json
+            sed -i "s/GUILD_ID/${{ secrets.GUILD_ID }}/g" config.json
+            sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" config.json
+          elif [ $RUNNER_OS == "Windows" ]; then
+            (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json\
+            (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
+            (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
+          fi
       - name: Deploy bot
-        if: runner.os == "Linux"
         run: |
-          RUNNER_TRACKING_ID="" && (nohup node index.js &)
-        if: runner.os == "Windows"
-        run: Start-Process -NoNewWindow node index.js
+          if [ $RUNNER_OS == "Linux" ]; then
+            RUNNER_TRACKING_ID="" && (nohup node index.js &)
+          elif [ $RUNNER_OS == "Windows" ]; then
+            Start-Process -NoNewWindow node index.js
+          fi
