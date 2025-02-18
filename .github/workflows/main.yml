@@ -21,29 +21,25 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-  deploy-ubuntu:
+  deploy:
     needs: setup
     runs-on:
-      labels: [Linux]
+      labels: discord-bot
     steps:
       - name: Update config.json
+        if: runner.os == "Linux"
         run: |
           sed -i "s/DISCORD_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" config.json
           sed -i "s/GUILD_ID/${{ secrets.GUILD_ID }}/g" config.json
           sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" config.json
-      - name: Deploy discord bot
-        run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
-
-  deploy-windows:
-    needs: setup
-    runs-on:
-      labels: [Windows]
-    steps:
-      - name: Update config.json
+        if: runner.os == "Windows"
         run: |
-          ls 
-          (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json
+          (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json\
           (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
           (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
-      - name: Deploy discord bot
+      - name: Deploy bot
+        if: runner.os == "Linux"
+        run: |
+          RUNNER_TRACKING_ID="" && (nohup node index.js &)
+        if: runner.os == "Windows"
         run: Start-Process -NoNewWindow node index.js
