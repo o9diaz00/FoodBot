@@ -39,10 +39,6 @@ jobs:
           (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
           (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
 
-      - name: Deploy bot LINUX
-        if: runner.os == 'Linux'
-        run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
-      - name: Deploy bot WINDOWS
+      - name: Deploy bot
         shell: bash
-        if: runner.os == 'Windows'
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
