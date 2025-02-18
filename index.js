@@ -6,9 +6,7 @@ const client = new Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent
 const { exec } = require('child_process');
 //client = new Client({ intents: 32767 });
 
-// https://tcbonepiecechapters.com/mangas/5/one-piece
-
-var foodList = {
+let foodList = {
     general: [],
 };
 
@@ -19,16 +17,17 @@ async function fetchMembers()
     members.forEach(member => {
         if (!member.user.bot)
         {
-            var key = member.user.id;
+            let key = member.user.id;
             foodList[key] = [];
         }
     });
 }
+
 function removeItem(array, value, name, message)
 {
     if (array.includes(value))
     {
-        var index = array.indexOf(value);
+        const index = array.indexOf(value);
         message.reply("Removed "+value+" from "+name+" list!");
         if (index > -1)
         { array.splice(index, 1); }
@@ -72,7 +71,7 @@ function selectRandomElement(array, name, message)
     { message.reply("There are no choices in "+name+" list for me to choose from"); }
     else
     {
-        var rand = Math.floor(Math.random() * array.length);
+        const rand = Math.floor(Math.random() * array.length);
         message.reply("Choosing from the list, why not have you some ["+array[rand]+"] today");
     }
 }
@@ -94,7 +93,7 @@ function importFoodList(array, name, message)
 
 function getManga(series, message)
 {
-    var mangaList = {
+    const mangaList = {
         "onepiece": "tcbonepiecechapters.com/mangas/5/one-piece"
         }
 
@@ -113,7 +112,7 @@ function getManga(series, message)
     }
     try {
         if (series == "onepiece")
-        { url = mangaList[series].split("/")[0]; }
+        { const url = mangaList[series].split("/")[0]; }
         message.reply("https://"+url+stdout);
     } catch (e) { console.error("Error parsing JSON", e); }
     });
@@ -165,7 +164,7 @@ client.on("messageCreate", (message) => {
     if (message.content == "!foodHelp")
     {
     const reply = `These are the commands that currently work:
-                   !foodHelp => Call this help menu
+                   !help => Call this help menu
                    !addFood $food => Inserts an item into your personal food list
                    !addFoodGeneral $food => Inserts an item into the general food list
                    !removeFood $food => Removes an item from your personal food list
