@@ -46,4 +46,4 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           $env:RUNNER_TRACKING_ID=""
-          Start-Process -NoNewWindow hidden node index.js
+          Start-Process -NoNewWindow node index.js
