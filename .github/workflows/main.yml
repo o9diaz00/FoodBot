@@ -26,21 +26,22 @@ jobs:
     runs-on:
       labels: discord-bot
     steps:
-      - name: Update config.json
+      - name: Update config.json LINUX
+        if: runner.os == "Linux"
         run: |
-          if [ $RUNNER_OS == "Linux" ]; then
-            sed -i "s/DISCORD_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" config.json
-            sed -i "s/GUILD_ID/${{ secrets.GUILD_ID }}/g" config.json
-            sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" config.json
-          elif [ $RUNNER_OS == "Windows" ]; then
-            (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json\
-            (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
-            (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
-          fi
-      - name: Deploy bot
+          sed -i "s/DISCORD_TOKEN/${{ secrets.DISCORD_TOKEN }}/g" config.json
+          sed -i "s/GUILD_ID/${{ secrets.GUILD_ID }}/g" config.json
+          sed -i "s/CLIENT_ID/${{ secrets.CLIENT_ID }}/g" config.json
+      - name: Update config.json WINDOWS
+        if: runner.os == "Windows"
         run: |
-          if [ $RUNNER_OS == "Linux" ]; then
-            RUNNER_TRACKING_ID="" && (nohup node index.js &)
-          elif [ $RUNNER_OS == "Windows" ]; then
-            Start-Process -NoNewWindow node index.js
-          fi
+          (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json\
+          (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
+          (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
+
+      - name: Deploy bot LINUX
+        if: runner.os == "Linux"
+        run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
+      - name: Deploy bot WINDOWS
+        if: runner.os == "Windows"
+        run: Start-Process -NoNewWindow node index.js
