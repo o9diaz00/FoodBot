@@ -22,6 +22,7 @@ jobs:
       run: npm install
 
   deploy-ubuntu:
+    needs: setup
     runs-on:
       labels: [discord-bot, Linux]
     steps:
@@ -34,6 +35,7 @@ jobs:
         run: RUNNER_TRACKING_ID="" && (nohup node index.js &)
 
   deploy-windows:
+    needs: setup
     runs-on:
       labels: [discord-bot, Windows]
     steps:
@@ -43,4 +45,4 @@ jobs:
           (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
           (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
       - name: Deploy discord bot
-        run: Start-Process -NoNewWindow index.js
+        run: Start-Process -NoNewWindow node index.js
