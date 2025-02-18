@@ -35,7 +35,7 @@ jobs:
       - name: Update config.json WINDOWS
         if: runner.os == 'Windows'
         run: |
-          (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json\
+          (Get-Content config.json).Replace("DISCORD_TOKEN","${{ secrets.DISCORD_TOKEN }}") | Set-Content config.json
           (Get-Content config.json).Replace("GUILD_ID","${{ secrets.GUILD_ID }}") | Set-Content config.json
           (Get-Content config.json).Replace("CLIENT_ID","${{ secrets.CLIENT_ID }}") | Set-Content config.json
 
