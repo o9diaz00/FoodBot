@@ -4,6 +4,7 @@ const { Client, Discord, Intents, TextChannel } = require('discord.js')
 const { clientId, guildId, token } = require('./config.json');
 const client = new Client({ intents: ['Guilds', 'GuildMessages', 'MessageContent', 'GuildMembers'] });
 const { exec } = require('child_process');
+const os = require('os');
 //client = new Client({ intents: 32767 });
 
 let foodList = {
@@ -93,14 +94,18 @@ function importFoodList(array, name, message)
 
 function getManga(series, message)
 {
+    let cmd = "";
     const mangaList = {
         "onepiece": "tcbonepiecechapters.com/mangas/5/one-piece"
         }
 
     if (!mangaList[series])
     { message.reply("Sorry, this feature hasn't been implemented for "+series); return 1};
-
-    const cmd = "bash curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2";
+    console.log(os.type());
+    if (os.type().includes("Linux"))
+    { cmd = "curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2"; }
+    else if (os.type().includes("Windows"))
+    { cmd = "bash -l -c \"curl -s "+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1 \""; }
     exec(cmd, (error, stdout, stderr) => {
     if (error) {
         console.error(`exec error: ${error}`);
@@ -111,8 +116,9 @@ function getManga(series, message)
         return;
     }
     try {
+        let url = "";
         if (series == "onepiece")
-        { const url = mangaList[series].split("/")[0]; }
+        { url = mangaList[series].split("/")[0]; }
         message.reply("https://"+url+stdout);
     } catch (e) { console.error("Error parsing JSON", e); }
     });
