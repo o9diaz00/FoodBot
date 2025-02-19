@@ -101,11 +101,10 @@ function getManga(series, message)
 
     if (!mangaList[series])
     { message.reply("Sorry, this feature hasn't been implemented for "+series); return 1};
-    console.log(os.type());
     if (os.type().includes("Linux"))
-    { cmd = "curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep '<a href=\"/chapters/' | head -1 | cut -d'\"' -f2"; }
+    { cmd = "curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1"; }
     else if (os.type().includes("Windows"))
-    { cmd = "bash -l -c \"curl -s "+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1 \""; }
+    { cmd = "bash -l -c \"curl -s https://"+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1 \""; }
     exec(cmd, (error, stdout, stderr) => {
     if (error) {
         console.error(`exec error: ${error}`);
