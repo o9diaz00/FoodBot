@@ -103,7 +103,7 @@ function getManga(series, message)
     { message.reply("Sorry, this feature hasn't been implemented for "+series); return 1};
     if (os.type().includes("Linux"))
     { cmd = "curl -s -H 'Accept: application/json' -X GET https://"+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1"; }
-    else if (os.type().includes("Windows"))
+    else
     { cmd = "bash -l -c \"curl -s https://"+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1 \""; }
     exec(cmd, (error, stdout, stderr) => {
     if (error) {
