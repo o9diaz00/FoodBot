@@ -107,11 +107,11 @@ function getManga(series, message)
     { cmd = "bash -l -c \"curl -s https://"+mangaList[series]+" | grep -oP '/chapters/(.+?)-[0-9]+' | head -1 \""; }
     exec(cmd, (error, stdout, stderr) => {
     if (error) {
-        message.reply("exec error: "+error);
+        console.error("exec error: ${error}");
         return;
     }
     if (stderr) {
-        message.reply("stderr: ${stderr}");
+        console.error("stderr: ${stderr}");
         return;
     }
     try {
